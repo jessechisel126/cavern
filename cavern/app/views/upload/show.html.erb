@@ -1,12 +1,12 @@
 <h1>Parsed data</h1>
 
-<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-<script>frequencyChart(<%= $positive_points %>, <%= $negative_points %>);</script>
+<div id="song-amplitude" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="peak-location" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
-<%= $positive_points == $negative_points %>
+<script>
+	lineChart(<%= $positive_points %>, [<%= $negative_points %>], 'song-amplitude');
+	beatChart(<%= $peak_ranges %>, "peak-location");
+</script>
+
 
 <%= $data.length %>
-
-<br>
-
-<%= $data %>

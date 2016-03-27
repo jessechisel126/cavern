@@ -1,11 +1,15 @@
 include WaveFile
 
+NUM_PARTITIONS = 1000
+THRESHOLD = 0.5
+
 class UploadController < ApplicationController
   $file_name = nil
   $channels = nil
   $data = []
   $positive_points = []
   $negative_points = []
+  $peak_ranges = []
 
   def new
   end
@@ -32,8 +36,7 @@ class UploadController < ApplicationController
 
     # byebug
     reader = Reader.new($file_name)
-    $data = []
-    $subset_data = []
+    $data = $peak_ranges = $positive_points = $negative_points = []
     begin
       while true do
         buffer = reader.read(4096)
@@ -54,10 +57,36 @@ class UploadController < ApplicationController
       (x > 0) ? 0 : x 
     }
 
-    $positive_points = UploadHelper::partition($positive_points, 1000)
+    $positive_points = UploadHelper::partition($positive_points, NUM_PARTITIONS)
         .map { |a| UploadHelper::average_list(a) }
-    $negative_points = UploadHelper::partition($negative_points, 1000)
+    $negative_points = UploadHelper::partition($negative_points, NUM_PARTITIONS)
         .map { |a| UploadHelper::average_list(a) }
+
+    # First we run through our positive_points array and find the global_max
+    global_max = 0
+    $positive_points.each { 
+      |element| global_max = (element > global_max) ? element : global_max 
+    }
+
+    # After we have our global max, we compare it to a threshold defined
+    # as a constant where elements that are above global_max * THRESHOLD
+    # can be added to our $peak_ranges
+    $peak_ranges = []
+    beat_range = []
+    $positive_points.each_with_index do |element, i|
+      if element >= (global_max * THRESHOLD)
+        beat_range << i
+      else 
+        $peak_ranges << [beat_range[0], beat_range[-1]] unless beat_range.length < 2
+        beat_range = []
+      end
+    end
+    
+    byebug
+
+    # Since we may leave our check for maximums ON a maximum, we check our
+    # beat_range one more time verifying whether or not it's a peak range
+    $peak_ranges << [beat_range[0], beat_range[-1]] unless beat_range.length < 2
 
     redirect_to '/upload/show'
   end
@@ -65,5 +94,6 @@ class UploadController < ApplicationController
   def show
     @uploader = AudioFileUploader.new
     @uploader.retrieve_from_store!($file_name)
+    # @uploader.remove!()
   end
 end

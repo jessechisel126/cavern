@@ -1,1 +1,10 @@
-<h1>Parsing the file...</h1>
+<script> 
+$.ajax({
+    url: "/upload/loading",
+    cache: false,
+    success: function(html){
+      $("#my-id").append(html);
+    }
+});
+</script>
+<div id="my-id"><h1>Parsing the file...</h1></div>
