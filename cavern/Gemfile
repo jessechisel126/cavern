@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 #   gem 'ruby-audio'
 # end
 
+gem 'wavefile'
 gem 'carrierwave'
 gem 'bootstrap-sass', '~> 3.2.0'
 
