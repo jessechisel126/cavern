@@ -2,6 +2,7 @@ include WaveFile
 
 class UploadController < ApplicationController
   $file_name = nil
+  $channels = nil
   $data = []
   $positive_points = []
   $negative_points = []
@@ -29,11 +30,14 @@ class UploadController < ApplicationController
     # @uploader = AudioFileUploader.new
     # @uploader.retrieve_from_store!($file_name)
 
+    # byebug
     reader = Reader.new($file_name)
-    $data = $subset_data = []
+    $data = []
+    $subset_data = []
     begin
       while true do
         buffer = reader.read(4096)
+        $channels ||= buffer.channels
         $data += buffer.samples
         puts "Read #{buffer.samples.length} samples."
       end
@@ -41,8 +45,14 @@ class UploadController < ApplicationController
       reader.close
     end
 
-    $positive_points = $data.map { |x| (x < 0) ? 0 : x }
-    $negative_points = $data.map { |x| (x > 0) ? 0 : x }
+    $data = $data.map { |x| x[0] } if $channels > 1
+
+    $positive_points = $data.map { |x| 
+      (x < 0) ? 0 : x 
+    }
+    $negative_points = $data.map { |x| 
+      (x > 0) ? 0 : x 
+    }
 
     $positive_points = UploadHelper::partition($positive_points, 1000)
         .map { |a| UploadHelper::average_list(a) }

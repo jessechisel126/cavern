@@ -3,7 +3,6 @@ var frequencyChart = function (high, low) {
         chart: {
             renderTo: 'container',
             zoomType: 'x',
-            type: 'column',
         },
         title: {
             text: 'Song frequency'
@@ -23,12 +22,26 @@ var frequencyChart = function (high, low) {
             enabled: false
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.1,
-                borderWidth: 0.5
+            area: {
+                fillColor: {
+                    linearGradient: {
+                        x1: 0,
+                        y1: 0,
+                        x2: 0,
+                        y2: 1
+                    },
+                    stops: [
+                        [0, Highcharts.getOptions().colors[1]],
+                        [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                threshold: null
             }
         },
-
         series: [{
             data: high
         }, {
@@ -37,24 +50,11 @@ var frequencyChart = function (high, low) {
     });
 };
 
-/// For line graphs in plotOptions
 
-// area: {
-//     fillColor: {
-//         linearGradient: {
-//             x1: 0,
-//             y1: 0,
-//             x2: 0,
-//             y2: 1
-//         },
-//         stops: [
-//             [0, Highcharts.getOptions().colors[0]],
-//             [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-//         ]
-//     },
-//     marker: {
-//         radius: 2
-//     },
-//     lineWidth: 1,
-//     threshold: null
+// column: {
+//     pointPadding: 0.1,
+//     borderWidth: 0.5
 // }
+
+
+/// For line graphs in plotOptions
