@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+# source 'http://gemcutter.org' do
+#   gem 'ruby-audio'
+# end
+
 gem 'carrierwave'
 gem 'bootstrap-sass', '~> 3.2.0'
 
