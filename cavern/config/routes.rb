@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   get  'upload/new'     => 'upload#new'
   post 'upload/create'  => 'upload#create'
+  get  'upload/loading' => 'upload#loading'
   get  'upload/show'    => 'upload#show'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
