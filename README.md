@@ -1,2 +1,4 @@
 # cavern
-Put music in, get music out, SOUNDS GOOD!!!!!!!!!!!!!1
+Make .wav's and echo them through the cavern.
+
+Rails webapp, takes an input .wav file and processes it, detecting rhythms and displaying them.
