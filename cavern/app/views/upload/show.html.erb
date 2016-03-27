@@ -1,12 +1,9 @@
-<h1>Parsed data</h1>
+<h1>Track Data</h1>
 
 <div id="song-amplitude" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-<div id="peak-location" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="peak-location" style="min-width: 310px; height: 400px; margin-left: 33px; margin-right: 26px"></div>
 
 <script>
-	lineChart(<%= $positive_points %>, [<%= $negative_points %>], 'song-amplitude');
-	beatChart(<%= $peak_ranges %>, "peak-location");
+	lineChart(<%= $positive_points %>, <%= $negative_points %>, 'song-amplitude');
+	beatChart(<%= $peak_ranges.to_json %>, <%= NUM_PARTITIONS %>, "peak-location");
 </script>
-
-
-<%= $data.length %>

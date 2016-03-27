@@ -1,7 +1,7 @@
 include WaveFile
 
 NUM_PARTITIONS = 1000
-THRESHOLD = 0.5
+THRESHOLD = 0.05
 
 class UploadController < ApplicationController
   $file_name = nil
@@ -31,10 +31,7 @@ class UploadController < ApplicationController
   end
 
   def loading
-    # @uploader = AudioFileUploader.new
-    # @uploader.retrieve_from_store!($file_name)
-
-    # byebug
+    $channels = nil
     reader = Reader.new($file_name)
     $data = $peak_ranges = $positive_points = $negative_points = []
     begin
@@ -48,7 +45,9 @@ class UploadController < ApplicationController
       reader.close
     end
 
-    $data = $data.map { |x| x[0] } if $channels > 1
+    if $channels > 1
+      $data = $data.map { |x| x[0] }
+    end
 
     $positive_points = $data.map { |x| 
       (x < 0) ? 0 : x 
@@ -81,8 +80,6 @@ class UploadController < ApplicationController
         beat_range = []
       end
     end
-    
-    byebug
 
     # Since we may leave our check for maximums ON a maximum, we check our
     # beat_range one more time verifying whether or not it's a peak range
@@ -94,6 +91,5 @@ class UploadController < ApplicationController
   def show
     @uploader = AudioFileUploader.new
     @uploader.retrieve_from_store!($file_name)
-    # @uploader.remove!()
   end
 end
